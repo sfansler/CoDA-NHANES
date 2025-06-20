@@ -17,3 +17,9 @@ This file filters the clean dataset to exclude participants with fewer than 3 "v
 ### 3. R/table_1.R
 
 This file creates the table of study population characteristics.
+
+## Compositions
+
+### 4. R/create_conmpositions.R
+
+Creates daily-level and subject-level compositions of wake time
