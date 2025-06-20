@@ -23,3 +23,11 @@ This file creates the table of study population characteristics.
 ### 4. R/create_conmpositions.R
 
 Creates daily-level and subject-level compositions of wake time
+
+### 5. R/quantile_plots.R
+
+Creates all median plots across the lifespan and generates all figures in main analysis as well as figure A1 and A2.
+
+### 6. R/figure_A3.R
+
+Creates histogram of MIMS color-coded by wake-time behavior
