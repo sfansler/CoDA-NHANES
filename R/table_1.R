@@ -1,0 +1,100 @@
+library(haven)
+library(tidyverse)
+library(gtsummary)
+library(survey)
+library(table1)
+mims = readRDS("data/processed/mims.rds")
+demo = readRDS("data/processed/demo.rds")
+
+
+bmi_11 = read_xpt("data/raw/BMX_G.XPT") %>%
+  select(SEQN, BMXBMI)
+bmi_13 = read_xpt("data/raw/BMX_H.XPT") %>%
+  select(SEQN, BMXBMI)
+
+
+bmi = rbind(bmi_11, bmi_13)
+
+mims_demo = left_join(mims, demo)
+
+data_combined = left_join(mims_demo, bmi) %>%
+  select(SEQN, SDDSRVYR, RIDAGEYR, RIAGENDR, BMXBMI, RIDRETH1, WTMEC2YR) %>%
+  distinct()
+
+source("R/functions/get_new_weights.R")
+data_weighted = get_new_weights(data_combined)
+
+
+table_data = data_weighted %>%
+  filter(RIDAGEYR >= 6) %>%
+  rename(Age = RIDAGEYR,
+         Gender = RIAGENDR,
+         BMI = BMXBMI,
+         Race = RIDRETH1) %>%
+  mutate(age_cat = factor(case_when(between(Age, 3, 19) ~ "Age 3-19",
+                             between(Age, 20, 49) ~ "Age 20-49",
+                             between(Age, 50, 80) ~ "Age 50+"), levels = c("Age 3-19", "Age 20-49", "Age 50+")),
+         Gender = case_when(Gender == 1 ~ "Male",
+                            Gender == 2 ~ "Female"),
+         Race = factor(case_when(Race == 1 ~ "Mexican American",
+                          Race == 2 ~ "Other Hispanic",
+                          Race == 3 ~ "Non-Hispanic White",
+                          Race == 4 ~ "Non-Hispanic Black",
+                          .default = "Other"), levels = c("Non-Hispanic White", "Non-Hispanic Black", "Mexican American", "Other Hispanic", "Other"))) %>%
+  select(-SEQN, -Age)
+
+table_data = data_combined %>%
+  mutate(weights_combined = WTMEC2YR / 2) %>%
+  rename(Age = RIDAGEYR,
+         Gender = RIAGENDR,
+         BMI = BMXBMI,
+         Race = RIDRETH1) %>%
+  mutate(age_cat = factor(case_when(between(Age, 3, 19) ~ "Age 3-19",
+                                    between(Age, 20, 49) ~ "Age 20-49",
+                                    between(Age, 50, 80) ~ "Age 50+"), levels = c("Age 3-19", "Age 20-49", "Age 50+")),
+         Gender = case_when(Gender == 1 ~ "Male",
+                            Gender == 2 ~ "Female"),
+         Race = factor(case_when(Race == 1 ~ "Mexican American",
+                                 Race == 2 ~ "Other Hispanic",
+                                 Race == 3 ~ "Non-Hispanic White",
+                                 Race == 4 ~ "Non-Hispanic Black",
+                                 .default = "Other"), levels = c("Non-Hispanic White", "Non-Hispanic Black", "Mexican American", "Other Hispanic", "Other"))) %>%
+  select(-SEQN, -Age)
+
+
+
+tbl_1 = svydesign(id = ~1, weights = ~weights_combined, data = table_data) %>%
+  tbl_svysummary(by = age_cat, statistic = list(all_continuous() ~ "{mean} ({sd})",
+                                                all_categorical() ~ "{p}%"), include = c(Gender, BMI, Race), digits = list(Race = 0), missing = "no") %>%
+  add_overall() %>%
+  modify_table_styling(columns = "label",
+                       rows = row_type == "label",
+                       text_format = "bold",
+                       footnote = NULL) %>%
+  modify_header(all_stat_cols() ~ "**{level}** (n = {n_unweighted})") %>%
+  modify_footnote(
+    all_stat_cols() ~ NA
+) %>%
+  as_flex_table() %>%
+  flextable::theme_vanilla()
+
+
+flextable::save_as_docx(tbl_1, path = "tables/table_1.docx")
+
+
+tbl_counts = svydesign(id = ~1, weights = ~weights_combined, data = table_data) %>%
+  tbl_svysummary(by = age_cat, statistic = list(all_continuous() ~ "{mean} ({sd})",
+                                                all_categorical() ~ "{p}%"), include = c(Gender, BMI, Race), missing = "no") %>%
+  add_overall()
+
+# Number, % of participants in each age cat
+table_data %>%
+  group_by(age_cat) %>%
+  summarize(n = n(),
+            n_weighted = sum(weights_combined)) %>%
+  ungroup() %>%
+  mutate("%" = n / sum(n),
+         "%_weighted" = n_weighted / sum(n_weighted))
+
+
+
