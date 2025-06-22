@@ -33,4 +33,4 @@ mims_dist = mims %>%
     legend.position.inside = c(0.85, 0.5)
   )
 
-ggsave("figures/histograms/mims_histogram.png", mims_dist, width = 12, height = 7)
+#ggsave("figures/histograms/mims_histogram.png", mims_dist, width = 12, height = 7)
