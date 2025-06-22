@@ -79,22 +79,6 @@ tbl_1 = svydesign(id = ~1, weights = ~weights_combined, data = table_data) %>%
   flextable::theme_vanilla()
 
 
-flextable::save_as_docx(tbl_1, path = "tables/table_1.docx")
-
-
-tbl_counts = svydesign(id = ~1, weights = ~weights_combined, data = table_data) %>%
-  tbl_svysummary(by = age_cat, statistic = list(all_continuous() ~ "{mean} ({sd})",
-                                                all_categorical() ~ "{p}%"), include = c(Gender, BMI, Race), missing = "no") %>%
-  add_overall()
-
-# Number, % of participants in each age cat
-table_data %>%
-  group_by(age_cat) %>%
-  summarize(n = n(),
-            n_weighted = sum(weights_combined)) %>%
-  ungroup() %>%
-  mutate("%" = n / sum(n),
-         "%_weighted" = n_weighted / sum(n_weighted))
-
+#flextable::save_as_docx(tbl_1, path = "tables/table_1.docx")
 
 
