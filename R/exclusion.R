@@ -30,7 +30,7 @@ demo_valid <- demo %>% filter(SEQN %in% mims_seqn_valid$SEQN)
 #Merge valid mims with demo, save data
 mims <- merge(mims, demo_valid, by = "SEQN") %>%
   rename(Age = RIDAGEYR,
-         Gender = RIAGENDR)
+         Sex = RIAGENDR)
 saveRDS(mims, "data/processed/mims.rds")
 saveRDS(demo_valid, "data/processed/demo.rds")
   

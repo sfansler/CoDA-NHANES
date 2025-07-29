@@ -29,7 +29,7 @@ day_compositions = mims %>%
          mvpa_seb = mvpa / seb,
          lipa_seb = lipa / seb,
          activity_seb = (mvpa + lipa) / seb) %>%
-  select(SEQN, Age, Gender, DayofWeek, Wake, Sleep, wake_norm, sleep_norm, mvpa, lipa, seb, rel_mvpa, rel_lipa, rel_seb,
+  select(SEQN, Age, Sex, DayofWeek, Wake, Sleep, wake_norm, sleep_norm, mvpa, lipa, seb, rel_mvpa, rel_lipa, rel_seb,
          mvpa_lipa, mvpa_seb, lipa_seb, activity_seb) %>%
   distinct() %>%
   ungroup()
@@ -51,7 +51,7 @@ subject_compositions = day_compositions %>%
          avg_mvpa_seb = mean(mvpa_seb),
          avg_lipa_seb = mean(lipa_seb),
          avg_activity_seb = mean(activity_seb)) %>%
-  select(SEQN, Age, Gender, avg_sleep, avg_sleep_norm, avg_wake, avg_wake_norm, avg_mvpa, avg_lipa, avg_seb, avg_rel_mvpa, avg_rel_lipa, 
+  select(SEQN, Age, Sex, avg_sleep, avg_sleep_norm, avg_wake, avg_wake_norm, avg_mvpa, avg_lipa, avg_seb, avg_rel_mvpa, avg_rel_lipa, 
          avg_rel_seb, avg_mvpa_lipa, avg_mvpa_seb, avg_lipa_seb, avg_activity_seb) %>%
   distinct() %>%
   ungroup()

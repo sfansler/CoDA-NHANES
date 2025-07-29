@@ -16,10 +16,10 @@ new_weights = get_new_weights(demo)
 compositions_weights <- merge(subject_compositions, new_weights, by = "SEQN")
 
 compositions_male <- compositions_weights %>%
-  filter(Gender == 1) 
+  filter(Sex == 1) 
 
 compositions_female <- compositions_weights %>%
-  filter(Gender == 2)
+  filter(Sex == 2)
 
 source("R/functions/quantile_plot_functions.R")
 
@@ -50,14 +50,13 @@ preds_active_seb = get_quantile_curves(compositions_male, compositions_female, "
 
 ##ggplots
 
-## Plots of medians by gender
+## Plots of medians by Sex
 
 palette_med_plots = c("Female" = "#F98400", "Male" = "#00A08A")
 
 med_plot_sleep = preds_sleep %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
-  
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median sleep (min)", title = "Sleep") +
   scale_y_continuous(sec.axis = sec_axis(~ . / 60, name = "Median sleep (hours)", 
@@ -73,7 +72,7 @@ med_plot_sleep = preds_sleep %>%
 #ggsave("figures/quantile_plots/med_plot_sleep.png", med_plot_sleep, width = 9, height = 8)
 
 med_plot_wake = preds_wake %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median wake (min)", title = "Wake") +
@@ -92,7 +91,7 @@ med_plot_wake = preds_wake %>%
 
 
 med_plot_mvpa = preds_mvpa %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median MVPA (min)", title = "Absolute MVPA") +
@@ -105,7 +104,7 @@ med_plot_mvpa = preds_mvpa %>%
 
 
 med_plot_lipa = preds_lipa %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median LiPA (min)", title = "Absolute LiPA") +
@@ -117,7 +116,7 @@ med_plot_lipa = preds_lipa %>%
 
 
 med_plot_seb = preds_seb %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median SeB (min)", title = "Absolute SeB") +
@@ -129,44 +128,60 @@ med_plot_seb = preds_seb %>%
 
 
 med_plot_mvpa_lipa = preds_mvpa_lipa %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1) +
   scale_color_manual(values = palette_med_plots) +
-  labs(y = "Median MVPA/LiPA", title = "Median MVPA/LiPA by Gender") +
-  theme_bw()
+  labs(y = "Median MVPA/LiPA", title = "MVPA/LiPA") +
+  theme_bw(base_size = 14) +
+  theme(plot.title = element_text(size = 23, hjust = 0.5, face = "bold"),
+        axis.text = element_text(size = 14, face = "bold"),
+        axis.title = element_text(size = 14, face = "bold"),
+        legend.position = "inside",
+        legend.position.inside = c(0.80, 0.75))
 
 #ggsave("figures/quantile_plots/med_plot_mvpa_lipa.png", med_plot_mvpa_lipa, width = 10)
 
 
 med_plot_mvpa_seb = preds_mvpa_seb %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median MVPA/SeB", title = "MVPA/SeB")  +
-  theme_bw(base_size = 14) +
-  theme(plot.title = element_text(size = 23, face = "bold", hjust = 0.5))
+  theme_bw(base_size = 14) +  
+  theme(plot.title = element_text(size = 23, hjust = 0.5, face = "bold"),
+        axis.text = element_text(size = 14, face = "bold"),
+        axis.title = element_text(size = 14, face = "bold"),
+        legend.position = "inside",
+        legend.position.inside = c(0.80, 0.75))
 
 #ggsave("figures/quantile_plots/med_plot_mvpa_seb.png", med_plot_mvpa_seb, width = 10)
 
 med_plot_lipa_seb = preds_lipa_seb %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median LiPA/SeB", title = "LiPA/SeB") +
   theme_bw(base_size = 14) +
-  theme(plot.title = element_text(size = 23, face = "bold", hjust = 0.5))
-
+  theme(plot.title = element_text(size = 23, hjust = 0.5, face = "bold"),
+        axis.text = element_text(size = 14, face = "bold"),
+        axis.title = element_text(size = 14, face = "bold"),
+        legend.position = "inside",
+        legend.position.inside = c(0.80, 0.75))
 #ggsave("figures/quantile_plots/med_plot_lipa_seb.png", med_plot_lipa_seb, width = 10)
 
 
 
 med_plot_active_seb = preds_active_seb %>% 
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median (MVPA + LiPA)/SeB", title = "(MVPA + LiPA)/SeB") +
   theme_bw(base_size = 14) +
-  theme(plot.title = element_text(size = 23, face = "bold", hjust = 0.5))
+  theme(plot.title = element_text(size = 23, hjust = 0.5, face = "bold"),
+        axis.text = element_text(size = 14, face = "bold"),
+        axis.title = element_text(size = 14, face = "bold"),
+        legend.position = "inside",
+        legend.position.inside = c(0.80, 0.75))
 
 #ggsave("figures/quantile_plots/med_plot_active_seb.png", med_plot_active_seb, width = 10)
 
@@ -175,13 +190,13 @@ med_plot_active_seb = preds_active_seb %>%
 #Figure 1
 fig_1 = grid.arrange(med_plot_sleep, med_plot_wake)
 
-#ggsave("figures/quantile_plots/figure_1.png", fig_1, height = 10, width = 12)
+ggsave("figures/quantile_plots/figure_1.png", fig_1, height = 10, width = 12)
 
 
 #Figure 2
 
 med_plot_seb_small = preds_seb %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median SeB (min)", title = "Absolute SeB") +
@@ -194,7 +209,7 @@ med_plot_seb_small = preds_seb %>%
         axis.text = element_text(face = "bold", size = 14))
 
 med_plot_lipa_small = preds_lipa %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median LiPA (min)", title = "Absolute LiPA") +
@@ -207,7 +222,7 @@ med_plot_lipa_small = preds_lipa %>%
         axis.text = element_text(face = "bold", size = 14))
 
 med_plot_mvpa_small = preds_mvpa %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median MVPA (min)", title = "Absolute MVPA") +
@@ -227,7 +242,7 @@ med_plot_mvpa_small = preds_mvpa %>%
 
 
 med_plot_rel_seb_small = preds_rel_seb %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median SeB/Wake", title = "Relative SeB") +
@@ -239,7 +254,7 @@ med_plot_rel_seb_small = preds_rel_seb %>%
         axis.text = element_text(face = "bold", size = 14))
 
 med_plot_rel_lipa_small = preds_rel_lipa %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median LiPA/Wake", title = "Relative LiPA") +
@@ -251,7 +266,7 @@ med_plot_rel_lipa_small = preds_rel_lipa %>%
         axis.text = element_text(face = "bold", size = 14))
 
 med_plot_rel_mvpa_small = preds_rel_mvpa %>%
-  ggplot(aes(Age, quant_50, group = Gender, color = Gender)) +
+  ggplot(aes(Age, quant_50, group = Sex, color = Sex)) +
   geom_line(linewidth = 1.5) +
   scale_color_manual(values = palette_med_plots) +
   labs(y = "Median MVPA/Wake", title = "Relative MVPA") +
@@ -270,7 +285,7 @@ med_plot_rel_mvpa_small = preds_rel_mvpa %>%
 
 fig_2_matrix = grid.arrange(med_plot_seb_small, med_plot_lipa_small, med_plot_mvpa_small, med_plot_rel_seb_small, med_plot_rel_lipa_small, med_plot_rel_mvpa_small, nrow = 2)
 
-#ggsave("figures/quantile_plots/figure_2.png", fig_2_matrix, width = 9, height = 6)
+ggsave("figures/quantile_plots/figure_2.png", fig_2_matrix, width = 9, height = 6)
 
 
 # Figure 3
@@ -278,11 +293,11 @@ fig_2_matrix = grid.arrange(med_plot_seb_small, med_plot_lipa_small, med_plot_mv
 ##### Top panel
 ###combining absolute trends
 
-absolute_trends_combined = data.frame(quant_50 = c(preds_seb$quant_50, preds_lipa$quant_50, preds_mvpa$quant_50, preds_wake$quant_50), State = rep(c("SeB", "LiPA", "MVPA", "Wake"), each = 156), Gender = rep(c("Female", "Male"), times = 156/2*4), Age = rep(seq(3, 80), each = 2, times = 4))
+absolute_trends_combined = data.frame(quant_50 = c(preds_seb$quant_50, preds_lipa$quant_50, preds_mvpa$quant_50, preds_wake$quant_50), State = rep(c("SeB", "LiPA", "MVPA", "Wake"), each = 156), Sex = rep(c("Female", "Male"), times = 156/2*4), Age = rep(seq(3, 80), each = 2, times = 4))
 
 ### Renormalize to total wake time
 absolute_trends_norm = absolute_trends_combined %>%
-  group_by(Age, Gender) %>%
+  group_by(Age, Sex) %>%
   summarize(PA_behaviors = sum(quant_50[State != "Wake"]),
             SeB = quant_50[State == "SeB"],
             LiPA = quant_50[State == "LiPA"],
@@ -294,7 +309,7 @@ absolute_trends_norm = absolute_trends_combined %>%
   mutate(SeB_norm = wake * SeB_prop,
          LiPA_norm = wake * LiPA_prop,
          MVPA_norm = wake * MVPA_prop) %>%
-  select(Age, Gender, SeB_norm, LiPA_norm, MVPA_norm) %>%
+  select(Age, Sex, SeB_norm, LiPA_norm, MVPA_norm) %>%
   rename(SeB = SeB_norm, LiPA = LiPA_norm, MVPA = MVPA_norm) %>%
   pivot_longer(cols = c(SeB, LiPA, MVPA), names_to = "State", values_to = "quant_50") %>%
   mutate(State = factor(State, levels = c("MVPA", "LiPA", "SeB", "Wake")))
@@ -305,7 +320,7 @@ fig_3_top_panel =
   ggplot(data = absolute_trends_norm, aes(x = Age, y = quant_50, fill = State, color = State)) + 
   geom_col() + 
   labs(y = "Median Wake (min)") +
-  facet_wrap(vars(Gender)) +
+  facet_wrap(vars(Sex)) +
   theme_bw(base_size = 20) +
   scale_fill_manual(values = c("MVPA" = "#E54E21", "LiPA" = "#0A9F9D", "SeB" = "#CEB175")) +
   scale_color_manual(values = c("MVPA" = "#E54E21", "LiPA" = "#0A9F9D", "SeB" = "#CEB175")) +
@@ -325,27 +340,27 @@ fig_3_top_panel =
 
 ##### Bottom panel
 median_mvpa_wake = preds_rel_mvpa %>%
-  select(Age, quant_50, Gender) %>%
+  select(Age, quant_50, Sex) %>%
   distinct() %>%
   mutate(State = "MVPA")  
 
 median_lipa_wake = preds_rel_lipa%>%
-  select(Age, quant_50, Gender) %>%
+  select(Age, quant_50, Sex) %>%
   mutate(State = "LiPA")
 
 median_seb_wake = preds_rel_seb%>%
-  select(Age, quant_50, Gender) %>%
+  select(Age, quant_50, Sex) %>%
   mutate(State = "SeB")
 
 median_comps = rbind(median_mvpa_wake, median_lipa_wake, median_seb_wake) %>%
-  group_by(Gender, Age) %>%
+  group_by(Sex, Age) %>%
   mutate(quant_50_norm = quant_50 / sum(quant_50))
 
 comp_plots = median_comps %>%
   mutate(State = factor(State, levels = c("MVPA", "LiPA", "SeB"))) %>%
   ggplot(aes(x = Age, y = quant_50_norm, fill = State, color = State)) +
   geom_col() +
-  facet_wrap(vars(Gender)) +
+  facet_wrap(vars(Sex)) +
   labs(y = "Median composition of Wake") +
   theme_bw(base_size = 20) +
   scale_fill_manual(values = c("MVPA" = "#E54E21", "LiPA" = "#0A9F9D", "SeB" = "#CEB175")) +
@@ -361,18 +376,9 @@ comp_plots = median_comps %>%
         legend.title = element_text(size = 23)) +
   coord_cartesian(ylim = c(0.33, 1))
 
-#ggsave("figures/quantile_plots/figure_3.png", comp_plots, width = 13, height = 8.5, units = "in")
-
-#Figure A1
-fig_a1 = grid.arrange(med_plot_lipa_seb, med_plot_mvpa_seb, med_plot_active_seb, nrow = 2)
-  
-#ggsave("figures/quantile_plots/figure_A1.png", fig_a1)
-
+ggsave("figures/quantile_plots/figure_3.png", comp_plots, width = 13, height = 8.5, units = "in")
 
 #Figure A2
-fig_a2 = med_plot_mvpa_lipa +
-  labs(title = "MVPA/LiPA") +
-  theme_bw(base_size = 14) +
-  theme(plot.title = element_text(size = 23, face = "bold", hjust = 0.5))
-
-#ggsave("figures/quantile_plots/figure_A2.png", fig_a2)
+fig_a2 = grid.arrange(med_plot_lipa_seb, med_plot_mvpa_seb, med_plot_active_seb, med_plot_mvpa_lipa, nrow = 2)
+  
+ggsave("figures/quantile_plots/figure_A2.png", fig_a2, width = 8, height = 8)

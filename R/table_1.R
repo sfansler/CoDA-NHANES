@@ -28,14 +28,14 @@ data_weighted = get_new_weights(data_combined)
 table_data = data_weighted %>%
   filter(RIDAGEYR >= 6) %>%
   rename(Age = RIDAGEYR,
-         Gender = RIAGENDR,
+         Sex = RIAGENDR,
          BMI = BMXBMI,
          Race = RIDRETH1) %>%
   mutate(age_cat = factor(case_when(between(Age, 3, 19) ~ "Age 3-19",
                              between(Age, 20, 49) ~ "Age 20-49",
                              between(Age, 50, 80) ~ "Age 50+"), levels = c("Age 3-19", "Age 20-49", "Age 50+")),
-         Gender = case_when(Gender == 1 ~ "Male",
-                            Gender == 2 ~ "Female"),
+         Sex = case_when(Sex == 1 ~ "Male",
+                            Sex == 2 ~ "Female"),
          Race = factor(case_when(Race == 1 ~ "Mexican American",
                           Race == 2 ~ "Other Hispanic",
                           Race == 3 ~ "Non-Hispanic White",
@@ -46,14 +46,14 @@ table_data = data_weighted %>%
 table_data = data_combined %>%
   mutate(weights_combined = WTMEC2YR / 2) %>%
   rename(Age = RIDAGEYR,
-         Gender = RIAGENDR,
+         Sex = RIAGENDR,
          BMI = BMXBMI,
          Race = RIDRETH1) %>%
   mutate(age_cat = factor(case_when(between(Age, 3, 19) ~ "Age 3-19",
                                     between(Age, 20, 49) ~ "Age 20-49",
                                     between(Age, 50, 80) ~ "Age 50+"), levels = c("Age 3-19", "Age 20-49", "Age 50+")),
-         Gender = case_when(Gender == 1 ~ "Male",
-                            Gender == 2 ~ "Female"),
+         Sex = case_when(Sex == 1 ~ "Male",
+                            Sex == 2 ~ "Female"),
          Race = factor(case_when(Race == 1 ~ "Mexican American",
                                  Race == 2 ~ "Other Hispanic",
                                  Race == 3 ~ "Non-Hispanic White",
@@ -65,7 +65,7 @@ table_data = data_combined %>%
 
 tbl_1 = svydesign(id = ~1, weights = ~weights_combined, data = table_data) %>%
   tbl_svysummary(by = age_cat, statistic = list(all_continuous() ~ "{mean} ({sd})",
-                                                all_categorical() ~ "{p}%"), include = c(Gender, BMI, Race), digits = list(Race = 0), missing = "no") %>%
+                                                all_categorical() ~ "{p}%"), include = c(Sex, BMI, Race), digits = list(Race = 0), missing = "no") %>%
   add_overall() %>%
   modify_table_styling(columns = "label",
                        rows = row_type == "label",
@@ -79,6 +79,6 @@ tbl_1 = svydesign(id = ~1, weights = ~weights_combined, data = table_data) %>%
   flextable::theme_vanilla()
 
 
-#flextable::save_as_docx(tbl_1, path = "tables/table_1.docx")
+flextable::save_as_docx(tbl_1, path = "tables/table_1.docx")
 
 
