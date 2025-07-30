@@ -68,3 +68,4 @@ paper_plot = ggplot(data = bar_plot_paper, aes(x = 0.65, y = proportion, fill = 
 plot(paper_plot)
 
 ggsave("figures/bar_plots/Figure_A1b.png", paper_plot, width = 8, height = 10)
+ggsave("figures/bar_plots/Figure_A1b.pdf", paper_plot, width = 8, height = 10)
