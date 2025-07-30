@@ -191,7 +191,7 @@ med_plot_active_seb = preds_active_seb %>%
 fig_1 = grid.arrange(med_plot_sleep, med_plot_wake)
 
 ggsave("figures/quantile_plots/figure_1.png", fig_1, height = 10, width = 12)
-ggsave("figures/quantile_plots/figure_1.pdf", fig_1, height = 10, width = 12)
+ggsave("figures/quantile_plots/figure_1.pdf", fig_1, height = 10, width = 12, dpi = 1000)
 
 
 #Figure 2
@@ -287,7 +287,7 @@ med_plot_rel_mvpa_small = preds_rel_mvpa %>%
 fig_2_matrix = grid.arrange(med_plot_seb_small, med_plot_lipa_small, med_plot_mvpa_small, med_plot_rel_seb_small, med_plot_rel_lipa_small, med_plot_rel_mvpa_small, nrow = 2)
 
 ggsave("figures/quantile_plots/figure_2.png", fig_2_matrix, width = 9, height = 6)
-ggsave("figures/quantile_plots/figure_2.pdf", fig_2_matrix, width = 9, height = 6)
+ggsave("figures/quantile_plots/figure_2.pdf", fig_2_matrix, width = 9, height = 6, dpi = 1000)
 
 
 # Figure 3
@@ -398,7 +398,8 @@ g_top <- gtable::gtable_add_cols(g_top, unit(extra_width, "cm"))
 fig_3 <- arrangeGrob(g_top, g_bottom, ncol = 1, heights = c(1, 1))
 
 ggsave("figures/quantile_plots/figure_3.png", fig_3, width = 13, height = 17, units = "in")
-ggsave("figures/quantile_plots/figure_3.pdf", fig_3, width = 13, height = 17, units = "in")
+ggsave("figures/quantile_plots/figure_3.pdf", fig_3, width = 13, height = 17, units = "in", dpi = 1000)
+ggsave("figures/quantile_plots/figure_3.eps", plot = fig_3, device = "eps", width = 13, height = 17)
 
 #Figure A2
 fig_a2 = grid.arrange(med_plot_lipa_seb, med_plot_mvpa_seb, med_plot_active_seb, med_plot_mvpa_lipa, nrow = 2)
