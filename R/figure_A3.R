@@ -25,7 +25,6 @@ mims_dist = mims %>%
   ggplot(aes(x = log(MIMS + 1), fill = PA, weight = WTMEC2YR/2)) + 
   geom_histogram(bins = 50, color = "black") +
   scale_fill_manual(name = "Flags", values = c("Sleep" = "#798E87", "SeB" = "#CEB175", "LiPA" = "#0A9F9D", "MVPA" = "#E54E21")) +
-  labs(title = "MIMS distribution") +
   geom_vline(aes(xintercept = log(lipa_cp + 1)), linewidth = 1, color = "#0A9F9D") +
   geom_vline(aes(xintercept = log(mvpa_cp + 1)), linewidth = 1, color = "#E54E21") +
   theme_bw(base_size = 15) +
