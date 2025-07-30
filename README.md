@@ -1,4 +1,4 @@
-# Epidemiology of compositions of 24-hour behaviors in US adolescents and adults
+# Lifespan trends in 24-hour movement behavior compositions in US youth and adults
 
 This Github repo contains the code needed to reproduce the figures and results in the paper. Below find a detailed workflow to clean, process, and analyze the data.
 
@@ -24,10 +24,18 @@ This file creates the table of study population characteristics.
 
 Creates daily-level and subject-level compositions of wake time
 
-### 5. R/quantile_plots.R
+### 5. R/median_plots.R
 
-Creates all median plots across the lifespan and generates all figures in main analysis as well as figure A1 and A2.
+Creates all median plots across the lifespan and generates all figures in main analysis as well as figure A2
 
-### 6. R/figure_A3.R
+### 6. R/figure_A1a.R
+
+Creates example heatmap of subject
+
+### 7. R/figure_A1b.R
+
+Creates compositional barplot of subject
+
+### 8. R/figure_A3.R
 
 Creates histogram of MIMS color-coded by wake-time behavior
