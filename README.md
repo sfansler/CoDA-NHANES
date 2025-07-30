@@ -1,4 +1,4 @@
-# Epidemiology of compositions of 24-hour behaviors in US adolescents and adults
+# Lifespan trends in 24-hour movement behavior compositions in US youth and adults
 
 This Github repo contains the code needed to reproduce the figures and results in the paper. Below find a detailed workflow to clean, process, and analyze the data.
 
