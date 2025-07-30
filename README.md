@@ -20,7 +20,7 @@ This file creates the table of study population characteristics.
 
 ## Compositions
 
-### 4. R/create_conmpositions.R
+### 4. R/create_compositions.R
 
 Creates daily-level and subject-level compositions of wake time
 
