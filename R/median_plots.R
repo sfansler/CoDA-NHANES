@@ -3,7 +3,7 @@ library(gridExtra)
 library(wesanderson)
 library(ggnewscale)
 library(patchwork)
-
+library(grid)
 
 #Loading in aggregated compositions
 
@@ -191,6 +191,7 @@ med_plot_active_seb = preds_active_seb %>%
 fig_1 = grid.arrange(med_plot_sleep, med_plot_wake)
 
 ggsave("figures/quantile_plots/figure_1.png", fig_1, height = 10, width = 12)
+ggsave("figures/quantile_plots/figure_1.pdf", fig_1, height = 10, width = 12)
 
 
 #Figure 2
@@ -286,6 +287,7 @@ med_plot_rel_mvpa_small = preds_rel_mvpa %>%
 fig_2_matrix = grid.arrange(med_plot_seb_small, med_plot_lipa_small, med_plot_mvpa_small, med_plot_rel_seb_small, med_plot_rel_lipa_small, med_plot_rel_mvpa_small, nrow = 2)
 
 ggsave("figures/quantile_plots/figure_2.png", fig_2_matrix, width = 9, height = 6)
+ggsave("figures/quantile_plots/figure_2.pdf", fig_2_matrix, width = 9, height = 6)
 
 
 # Figure 3
@@ -356,7 +358,7 @@ median_comps = rbind(median_mvpa_wake, median_lipa_wake, median_seb_wake) %>%
   group_by(Sex, Age) %>%
   mutate(quant_50_norm = quant_50 / sum(quant_50))
 
-comp_plots = median_comps %>%
+fig_3_bottom_panel = median_comps %>%
   mutate(State = factor(State, levels = c("MVPA", "LiPA", "SeB"))) %>%
   ggplot(aes(x = Age, y = quant_50_norm, fill = State, color = State)) +
   geom_col() +
@@ -376,9 +378,30 @@ comp_plots = median_comps %>%
         legend.title = element_text(size = 23)) +
   coord_cartesian(ylim = c(0.33, 1))
 
-ggsave("figures/quantile_plots/figure_3.png", comp_plots, width = 13, height = 8.5, units = "in")
+#ggsave("figures/quantile_plots/figure_3_bottom_panel.png", fig_3_bottom_panel, width = 13, height = 8.5, units = "in")
+
+
+g_top <- ggplotGrob(fig_3_top_panel)
+g_bottom <- ggplotGrob(fig_3_bottom_panel)
+
+panel_cols_top <- g_top$layout[g_top$layout$name == "panel-1-1", "l"]
+panel_cols_bottom <- g_bottom$layout[g_bottom$layout$name == "panel-1-1", "l"]
+
+widths_top <- g_top$widths
+widths_bottom <- g_bottom$widths
+
+extra_width <- sum(as.numeric(convertWidth(widths_bottom, "cm", valueOnly = TRUE))) - 
+  sum(as.numeric(convertWidth(widths_top, "cm", valueOnly = TRUE)))
+
+g_top <- gtable::gtable_add_cols(g_top, unit(extra_width, "cm"))
+
+fig_3 <- arrangeGrob(g_top, g_bottom, ncol = 1, heights = c(1, 1))
+
+ggsave("figures/quantile_plots/figure_3.png", fig_3, width = 13, height = 17, units = "in")
+ggsave("figures/quantile_plots/figure_3.pdf", fig_3, width = 13, height = 17, units = "in")
 
 #Figure A2
 fig_a2 = grid.arrange(med_plot_lipa_seb, med_plot_mvpa_seb, med_plot_active_seb, med_plot_mvpa_lipa, nrow = 2)
   
 ggsave("figures/quantile_plots/figure_A2.png", fig_a2, width = 8, height = 8)
+ggsave("figures/quantile_plots/figure_A2.pdf", fig_a2, width = 8, height = 8)
