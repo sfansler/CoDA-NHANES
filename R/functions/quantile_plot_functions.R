@@ -2,34 +2,37 @@ library(gamlss)
 library(tidyverse)
 get_quantile_curves = function(male_df, female_df, var, weights, cent, df) {
 
-  compositions_male = male_df
-  compositions_female = female_df
+  male_df = male_df
+  female_df = female_df
   
-  y_male = compositions_male %>%
+  age_male = male_df$Age
+  age_female = female_df$Age
+  
+  y_male = male_df %>%
     select(all_of(var)) %>%
     unlist() %>%
     unname()
     
-  y_female = compositions_female %>%
+  y_female = female_df %>%
     select(all_of(var)) %>%
     unlist() %>%
     unname()
   
-  weights_male = compositions_male %>%
+  weights_male = male_df %>%
     select(all_of(weights)) %>%
     unlist() %>%
     unname()
   
-  weights_female = compositions_female %>%
+  weights_female = female_df %>%
     select(all_of(weights)) %>%
     unlist() %>%
     unname()
   
-  fit_male = gamlss(formula =  y_male ~ pb(Age, df = df), sigma.formula = ~pb(Age, df = df), nu.formula = ~pb(Age, df = df), tau.formula = ~pb(Age, df = df), weights = weights_male, data = compositions_male)
-  fit_female = gamlss(formula =  y_female ~ pb(Age, df = df), sigma.formula = ~pb(Age, df = df), nu.formula = ~pb(Age, df = df), tau.formula = ~pb(Age, df = df), weights = weights_female, data = compositions_female)
+  fit_male = gamlss(formula =  y_male ~ pb(Age, df = df), sigma.formula = ~pb(Age, df = df), nu.formula = ~pb(Age, df = df), tau.formula = ~pb(Age, df = df), weights = weights_male, data = male_df)
+  fit_female = gamlss(formula =  y_female ~ pb(Age, df = df), sigma.formula = ~pb(Age, df = df), nu.formula = ~pb(Age, df = df), tau.formula = ~pb(Age), weights = weights_female, data = female_df)
   
-  preds_male = cbind(unique(centiles.pred(fit_male, xname = "Age", xvalues = compositions_male$Age, cent = cent)), Sex = "Male")
-  preds_female = cbind(unique(centiles.pred(fit_female, xname = "Age", xvalues = compositions_female$Age, cent = cent)), Sex = "Female")
+  preds_male = cbind(unique(centiles.pred(fit_male, xname = "Age", xvalues = age_male, cent = cent, data = male_df)), Sex = "Male")
+  preds_female = cbind(unique(centiles.pred(fit_female, xname = "Age", xvalues = age_female, cent = cent, data = female_df)), Sex = "Female")
   
   preds = rbind(preds_male, preds_female) %>%
     rename(Age = x) %>%

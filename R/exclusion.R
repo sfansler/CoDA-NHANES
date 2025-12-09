@@ -24,13 +24,27 @@ mims_seqn_valid <- mims %>%
   filter(n_days >= 3) %>% 
   ungroup()
 
+mims_seqn_invalid <- mims %>% 
+  group_by(SEQN, DayofWeek) %>% 
+  select(SEQN, DayofWeek) %>% 
+  distinct() %>% 
+  group_by(SEQN) %>% 
+  mutate(n_days = n()) %>% 
+  filter(n_days < 3) %>% 
+  ungroup()
 
 mims <- mims %>% filter(SEQN %in% mims_seqn_valid$SEQN)
 demo_valid <- demo %>% filter(SEQN %in% mims_seqn_valid$SEQN)
+
+demo_invalid <- demo %>% filter(SEQN %in% mims_seqn_invalid$SEQN)
+
 #Merge valid mims with demo, save data
 mims <- merge(mims, demo_valid, by = "SEQN") %>%
   rename(Age = RIDAGEYR,
          Sex = RIAGENDR)
+
+
+
 saveRDS(mims, "data/processed/mims.rds")
 saveRDS(demo_valid, "data/processed/demo.rds")
-  
+saveRDS(demo_invalid, "data/processed/demo_excluded.rds")

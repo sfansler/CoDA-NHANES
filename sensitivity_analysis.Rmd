@@ -1,0 +1,29 @@
+---
+title: "Sensitivity Analysis"
+output: html_document
+---
+
+These plots show the absolute and relative time spent in each PA behavior for different thresholds of LiPA and MVPA. For each, the percentile of MIMS and absolute MIMS value for each threshold are given. Note that the original thresholds were LiPA = 70th percentile (MIMS = 14.659) and MVPA = 95th percentile (MIMS = 35.996).
+
+
+
+# Original thresholds: LiPA = 70th percentile (MIMS = 14.659), MVPA = 95th percentile (MIMS = 35.996)
+
+![](figures/quantile_plots/figure_2.png)
+
+# Increasing LiPA threshold, leaving MVPA the same
+
+## LiPA = 75th percentile (MIMS = 17.678), MVPA = 95th percentile (MIMS = 35.996)
+![](figures/sensitivity_analysis/quantile_plots/figure_2_75_95.png)
+
+## LiPA = 80th percentile (MIMS = 20.987), MVPA = 95th percentile (MIMS = 35.996)
+![](figures/sensitivity_analysis/quantile_plots/figure_2_80_95.png)
+
+# Changing MVPA threshold, leaving LiPA the same
+
+## LiPA = 70th percentile (MIMS = 14.659), MVPA = 94th percentile (MIMS = 34.248)
+![](figures/sensitivity_analysis/quantile_plots/figure_2_70_94.png)
+
+## LiPA = 70th percentile (MIMS = 14.659), MVPA = 96th percentile (MIMS = 38.141)
+
+![](figures/sensitivity_analysis/quantile_plots/figure_2_70_96.png)
